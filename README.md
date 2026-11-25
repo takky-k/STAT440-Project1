@@ -1,3 +1,70 @@
+# STAT 440 Project 1 · Star Kingdom Pipe Replacement
+
+**Team UniUni は Public 2位、最終4位。** 43,039本のガス管のうち、どの鉄管をいつ、どの範囲で交換すれば、限られた予算で将来の漏水被害を減らせるかを競った。これは Takito Kobayashi が保存するチームの共同研究記録である。
+
+## 大会結果
+
+順位はチームメンバー Takito の記録に基づく。下表の金額は保存した公式Public年別明細から検算できる。チームの報告書は **G17** を最終案としている。提出記録で確認できた最高Publicは **G25**。授業の採点規則では、締切時に有効な最高Public提出を別の将来シナリオで再採点する。最終順位表の原本、Privateの金額、締切時の採点対象IDは未確認である。
+
+| 提出案 | Publicスコア | 工事費 | 漏水修理費 | 提出の特徴 |
+|---|---:|---:|---:|---|
+| G25 | **$81,154,843.01** | $138,108,705.77 | $30,736,451.22 | Ryotaの順序を引き継いだAmyの提出順を移植。G17比 **+$1,985,914.13** |
+| C03 | $79,192,152.48 | $139,679,313.48 | $31,128,534.04 | 円の中心移動と分割を組み合わせ、G17比で工事費を $23,223.60 削減 |
+| C02 | $79,183,830.86 | $139,687,635.10 | $31,128,534.04 | 円の分割 |
+| C01 | $79,177,265.21 | $139,694,200.75 | $31,128,534.04 | 円の中心移動 |
+| G17 | **$79,168,928.88** | $139,702,537.08 | $31,128,534.04 | G08で同年に予定した2円を統合。G08比 +$123.56 |
+
+スコアは **$250,000,000 − 工事費 − 漏水修理費**。たとえばG17は25年間で3,475件の漏水を修理し、計画工事で23,049本を交換した。Publicの工事支出は14年目（2040年）で終了し、その後も残存管の修理費が発生した。[G17の25年明細](docs/reports/2026-11-02_regional_optimization/G17/evidence/official_G17.csv) · [G25の25年明細](docs/reports/2026-11-02_regional_optimization/round7/official_G25.csv) · [C01〜C03の提出記録](submissions/2026-11-09_G17_geometry_search/official_submissions.json)
+
+| 提出 | 提出ID | CSVのSHA-256 |
+|---|---|---|
+| [G25](docs/reports/2026-11-02_regional_optimization/round7/submit/G25_Amy_submitted_order.csv) | SWo4lb1_875e | `6a25b2dac6813f68e22990b1b20a712f47ccecef072b79264343bfb2440dfc73` |
+| [G17](docs/reports/2026-11-02_regional_optimization/G17/G17_single_merge.csv) | SuKJib1exdar | `47a960a0cec73ee2abd1bb5df61891b66f64eca4a05f114e76a25e9b7a6dd86b` |
+| [C03](submissions/2026-11-09_G17_geometry_search/C03.csv) | SFN8bz8ynqbp | `02303f1a7eeb4b0b38d9158b0fc3d090b23cd45790a6d6df8adebf4c64b3ea40` |
+
+### Publicと内部評価で何が変わったか
+
+G25はPublicでG17の工事費と修理費をともに下げた。一方、同一乱数で比較した3,072通りの将来（24条件×128回）では、G25の対G17平均差は **−$789,833.39**。改善は12条件、最も不利な条件の平均差は **−$7,331,957.70** だった。C03は別の3,072シナリオで全24条件の平均がG17を上回り、全体平均差は **+$28,859.48**。G17自身も、G08をPublicで $123.56 上回った一方、独立の確認シミュレーションでの平均改善は **$0.10** だった。実際のPrivateで順位が変わった原因を特定するには、同じPrivateシナリオで採点した内訳が必要になる。[G25と他の順序案の比較](docs/reports/2026-11-02_regional_optimization/round7/README.md) · [C03の検証](submissions/2026-11-09_G17_geometry_search/REPORT.ja.txt) · [G17の比較記録](docs/reports/2026-11-02_regional_optimization/G17/evidence/EXPERIMENT_RECORD.md)
+
+## 開催時期とプロジェクトの経過
+
+2026年秋学期の授業内コンペ。公式の受付開始日と締切日時は未確認。Gitで日付を確認できるチームの開発・提出活動は **2026年9月28日〜11月9日**。
+
+| 時期 | 記録 |
+|---|---|
+| 9月28日 | リポジトリを開設。初期データと探索分析を共有 |
+| 10月上旬 | 各メンバーが漏水確率・修理費モデルを比較。年をまたぐ検証と予測の統合を進めた |
+| 10月14日 | Public・Privateの採点、予算繰越、提出形式を含む課題仕様を記録 |
+| 10月下旬 | 円の重なり、施工順、年別予算を検証。工事費の計算式訂正後に候補を再構築 |
+| 11月2日 | G17の提出・検証結果を整理。地域別の円形状と施工順の探索を記録 |
+| 11月9日 | 中心移動・分割、非対称損失、修理費の上側確率を使う提出案の公式結果を記録 |
+
+## データ、制約、手法
+
+- **観測期間は2019〜2026年。** 課題配布の管台帳43,039本と漏水履歴14,113件を管IDで結合した。座標・直線距離の単位はメートル。[管台帳](data/pipes.csv) · [漏水履歴](data/train.csv)
+- **交換計画は2027〜2051年の25年間。** 毎年1,000万ドルの工事予算が加算され、未使用額を繰り越せる。提出CSVの各行が円形工区を表し、円に完全に入る未交換の対象管を施工する。全鉄管の被覆と期限内の予算実行可能性が必要。[課題仕様](docs/assignment_2026-10-14.md) · [訂正後の工事費ルール](docs/current_rules.md)
+- **予測から施工順へ。** F168は10種類の生存・ハザードモデルをRidgeで統合し、各管の初回漏水時期を予測。CMS001はCatBoost、Random Forest、LightGBMから漏水時の条件付き修理費を推定した。これらを施工費、重複する管、追加で被覆できる管と組み合わせ、円の移動・分割・統合を試した。[G17の手法と検証資料](docs/reports/2026-11-02_regional_optimization/G17/G17_METHOD.en.md)
+
+## 協力者と担当
+
+| メンバー | リポジトリに記録された貢献 |
+|---|---|
+| Takito Kobayashi（takky-k） | 修理費モデル比較、F168・CMS001、施工案の探索、シミュレーション、提出結果の検算・記録 |
+| Amy Sim | XGBoostによる漏水予測と時間順検証、施工パイプライン、G25のもとになった提出順 |
+| Ryota Sato | CatBoostによる漏水確率予測、3年累積リスクに基づく順序案、Amyの案に受け継がれた施工順 |
+| Rion Oyama | Rによる条件付き修理費推定、近接する円のグループ化、動的な施工順とルール訂正後の再構築 |
+| Shana Nursoo | 修理費の線形回帰をAnthonyと、XGBoost・CatBoostをTakitoと担当。初期リポジトリの立ち上げ |
+| Mar Nacianceno | LightGBMによるベースライン、重み付き学習・校正、学習に使用しなかった行での予測を共有 |
+| Anthony Fesenko | 初期モデル探索、Shanaとの線形回帰による修理費推定 |
+
+各担当の根拠は[メンバー別ノートブック](notebooks/)、[Shanaの共同作業記録](notebooks/Shana_Nursoo/README.md)、[G25の順序の由来](docs/reports/2026-11-02_regional_optimization/round7/submission_log.json)、[元のPR記録](docs/upstream-github/pulls.json)にある。移植元の管理アカウントは reinesana。[チームリポジトリ](https://github.com/reinesana/STAT440-star-kingdom-project)
+
+## 移植した記録
+
+元の23ブランチを収録。移植時の元mainはタグ `upstream-main-2026-11-25`、15件のPRのheadと取得できた2件のmerge参照は `upstream-pr/` タグに保存した。[GitHub上のPR・Issue記録](docs/upstream-github/)には元の番号、作成者、URL、マージ状態がある。以下は元のREADMEで、当時の指示や途中段階のモデル選択も含む。
+
+---
+
 # STAT 440 – Star Kingdom Pipe Replacement
 
 [October 30: three submitted plans — best public $77.46M (integrated coverage)](reports/2026-10-30_submission_comparison.md)
